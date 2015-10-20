@@ -11152,7 +11152,7 @@ var MPrimaryStorage;
                 msg.hostname = ps.hostname;
             } else if (ps.type == 'LocalStorage') {
                 msg = new ApiHeader.APIAddLocalPrimaryStorageMsg();
-            } else if (ps.type == 'Ceph') {
+            } else if (ps.type == 'Lich') {
                 msg = new ApiHeader.APIAddCephPrimaryStorageMsg();
                 msg.monUrls = ps.cephMonUrls;
             }
@@ -11374,6 +11374,11 @@ var MPrimaryStorage;
                 qobj.limit = options.data.take;
                 qobj.start = options.data.pageSize * (options.data.page - 1);
                 psMgr.query(qobj, function (pss, total) {
+                    for (var c=0; c < pss.length; c++) {
+                        if (pss[c].type == 'Ceph') {
+                            pss[c].type ='Lich';
+                        }
+                    }
                     options.success({
                         data: pss,
                         total: total
@@ -11936,7 +11941,7 @@ var MPrimaryStorage;
                         return false;
                     },
                     canMoveToNext: function () {
-                        if (this.type == 'Ceph') {
+                        if (this.type == 'Lich') {
                             return Utils.notNullnotUndefined(this.name) && Utils.notNullnotUndefined(this.zoneUuid) && $scope.cephMonGrid__.dataSource.data().length > 0;
                         } else {
                             return Utils.notNullnotUndefined(this.name) && Utils.notNullnotUndefined(this.zoneUuid) && Utils.notNullnotUndefined(this.type) && Utils.notNullnotUndefined(this.url) && this.isUrlValid();
@@ -12141,6 +12146,7 @@ var MPrimaryStorage;
                     angular.forEach(psTypes, function (item) {
                         types.push({ type: item });
                     });
+                    types = [{type: "Lich"}, {type: "NFS"}, {type: "LocalStorage"}, {type: 'IscsiFileSystemBackendPrimaryStorage'}];
                     _this.$scope.typeList.dataSource.data(new kendo.data.ObservableArray(types));
                     _this.$scope.infoPage.type = psTypes[0];
                     chain.next();
@@ -15562,7 +15568,7 @@ var MBackupStorage;
             } else if (bs.type == 'SimulatorBackupStorage') {
                 msg = new ApiHeader.APIAddSimulatorBackupStorageMsg();
                 msg.type = 'SimulatorBackupStorage';
-            } else if (bs.type == 'Ceph') {
+            } else if (bs.type == 'Lich') {
                 msg = new ApiHeader.APIAddCephBackupStorageMsg();
                 msg.monUrls = bs.cephMonUrls;
             }
@@ -15794,6 +15800,11 @@ var MBackupStorage;
                 qobj.limit = options.data.take;
                 qobj.start = options.data.pageSize * (options.data.page - 1);
                 bsMgr.query(qobj, function (bss, total) {
+                    for (var c = 0; c < bss.length; c++) {
+                        if (bss[c].type == 'Ceph') {
+                            bss[c].type = 'Lich';
+                        }     
+                    }
                     options.success({
                         data: bss,
                         total: total
@@ -16370,7 +16381,7 @@ var MBackupStorage;
                     canMoveToNext: function () {
                         if (this.type == 'SftpBackupStorage') {
                             return Utils.notNullnotUndefined(this.name) && Utils.notNullnotUndefined(this.type) && Utils.notNullnotUndefined(this.url) && Utils.notNullnotUndefined(this.hostname) && Utils.notNullnotUndefined(this.username) && Utils.notNullnotUndefined(this.password) && this.isUrlValid();
-                        } else if (this.type == 'Ceph') {
+                        } else if (this.type == 'Lich') {
                             return $scope.cephMonGrid__.dataSource.data().length > 0;
                         } else {
                             return Utils.notNullnotUndefined(this.name) && Utils.notNullnotUndefined(this.type) && Utils.notNullnotUndefined(this.url);
@@ -16522,6 +16533,7 @@ var MBackupStorage;
                     angular.forEach(bsTypes, function (item) {
                         types.push({ type: item });
                     });
+                    types = [{type: "Lich"}, {type: "SftpBackupStorage"}];
                     _this.$scope.typeList.dataSource.data(new kendo.data.ObservableArray(types));
                     _this.$scope.infoPage.type = bsTypes[0];
                     chain.next();

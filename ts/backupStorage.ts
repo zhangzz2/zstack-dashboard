@@ -88,7 +88,7 @@ module MBackupStorage {
       } else if (bs.type == 'SimulatorBackupStorage') {
         msg = new ApiHeader.APIAddSimulatorBackupStorageMsg();
         msg.type = 'SimulatorBackupStorage';
-      } else if (bs.type == 'Ceph') {
+      } else if (bs.type == 'Lich') {
         msg = new ApiHeader.APIAddCephBackupStorageMsg();
         msg.monUrls = bs.cephMonUrls;
       }
@@ -937,7 +937,7 @@ module MBackupStorage {
                 && Utils.notNullnotUndefined(this.url) && Utils.notNullnotUndefined(this.hostname)
                 && Utils.notNullnotUndefined(this.username) && Utils.notNullnotUndefined(this.password)
                 && this.isUrlValid();
-            } else if (this.type == 'Ceph') {
+            } else if (this.type == 'Lich') {
               return $scope.cephMonGrid__.dataSource.data().length > 0;
             } else {
               return Utils.notNullnotUndefined(this.name) && Utils.notNullnotUndefined(this.type)

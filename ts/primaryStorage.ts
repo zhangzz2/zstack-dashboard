@@ -96,7 +96,7 @@ module MPrimaryStorage {
         msg.hostname = ps.hostname;
       } else if (ps.type == 'LocalStorage') {
         msg = new ApiHeader.APIAddLocalPrimaryStorageMsg();
-      } else if (ps.type == 'Ceph') {
+      } else if (ps.type == 'Lich') {
         msg = new ApiHeader.APIAddCephPrimaryStorageMsg();
         msg.monUrls = ps.cephMonUrls;
       }
@@ -943,7 +943,7 @@ module MPrimaryStorage {
           },
 
           canMoveToNext(): boolean {
-            if (this.type == 'Ceph') {
+            if (this.type == 'Lich') {
               return Utils.notNullnotUndefined(this.name) && Utils.notNullnotUndefined(this.zoneUuid) &&
                 $scope.cephMonGrid__.dataSource.data().length > 0;
             } else {
