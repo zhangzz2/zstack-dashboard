@@ -11376,7 +11376,7 @@ var MPrimaryStorage;
                 psMgr.query(qobj, function (pss, total) {
                     for (var c=0; c < pss.length; c++) {
                         if (pss[c].type == 'Ceph') {
-                            pss[c].type ='Lich';
+                            pss[c].type = 'Lich';
                         }
                     }
                     options.success({
@@ -12146,7 +12146,8 @@ var MPrimaryStorage;
                     angular.forEach(psTypes, function (item) {
                         types.push({ type: item });
                     });
-                    types = [{type: "Lich"}, {type: "NFS"}, {type: "LocalStorage"}, {type: 'IscsiFileSystemBackendPrimaryStorage'}];
+                    //types = [{type: "Lich"}, {type: "NFS"}, {type: "LocalStorage"}, {type: 'IscsiFileSystemBackendPrimaryStorage'}];
+                    types = [{type: "LocalStorage"}, {type: 'IscsiFileSystemBackendPrimaryStorage'}, {type: "NFS"}, {type: "Lich"}];
                     _this.$scope.typeList.dataSource.data(new kendo.data.ObservableArray(types));
                     _this.$scope.infoPage.type = psTypes[0];
                     chain.next();
@@ -12366,6 +12367,9 @@ angular.module('root').factory('PrimaryStorageManager', [
                 primaryStorageTypes: function ($q, Api) {
                     var defer = $q.defer();
                     Api.getPrimaryStorageTypes(function (psTypes) {
+                        if (psTypes == 'Ceph') {
+                            psTypes = 'Lich'
+                        }
                         defer.resolve(psTypes);
                     });
                     return defer.promise;
@@ -15803,7 +15807,7 @@ var MBackupStorage;
                     for (var c = 0; c < bss.length; c++) {
                         if (bss[c].type == 'Ceph') {
                             bss[c].type = 'Lich';
-                        }     
+                        }
                     }
                     options.success({
                         data: bss,
@@ -18144,6 +18148,9 @@ var MImage;
                                         }
                                     }
 
+                                    if (bs.type == 'Ceph') {
+                                        it.installPath = it.installPath.replace("ceph://", "/lichbd/");
+                                    }
                                     refs.push({
                                         name: bs.name,
                                         bsUuid: bs.uuid,
@@ -22436,6 +22443,9 @@ var MVolume;
             self.set('vmInstanceUuid', inv.vmInstanceUuid);
             self.set('diskOfferingUuid', inv.diskOfferingUuid);
             self.set('rootImageUuid', inv.rootImageUuid);
+            if (inv.type == 'Ceph') {
+                inv.installPath = inv.installPath.replace("ceph://", "/lichbd/");
+            }
             self.set('installPath', inv.installPath);
             self.set('type', inv.type);
             self.set('status', inv.status);
