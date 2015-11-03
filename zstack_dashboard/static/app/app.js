@@ -18551,6 +18551,11 @@ var MImage;
                     }
                 ];
                 _this.bsMgr.query(qobj, function (bss) {
+                    for (var i = 0; i < bss.length; i++) {
+                        if (bss[i].type == 'Ceph') {
+                            bss[i].type = 'Lich';
+                        }
+                    }
                     _this.$scope.backupStorageListOptions__.dataSource.data(bss);
 
                     chain.next();
