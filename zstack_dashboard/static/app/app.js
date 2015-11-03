@@ -22525,6 +22525,9 @@ var MVolume;
                 ret.inventories.forEach(function (inv) {
                     var c = new Volume();
                     angular.extend(c, inv);
+                    if (c.installPath.indexOf('ceph://') >= 0) {
+                        c.installPath = c.installPath.replace("ceph://", "/lichbd/");
+                    }
                     pris.push(_this.wrap(c));
                 });
                 callback(pris, ret.total);
