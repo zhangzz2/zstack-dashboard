@@ -22448,9 +22448,6 @@ var MVolume;
             self.set('vmInstanceUuid', inv.vmInstanceUuid);
             self.set('diskOfferingUuid', inv.diskOfferingUuid);
             self.set('rootImageUuid', inv.rootImageUuid);
-            if (inv.type == 'Ceph') {
-                inv.installPath = inv.installPath.replace("ceph://", "/lichbd/");
-            }
             self.set('installPath', inv.installPath);
             self.set('type', inv.type);
             self.set('status', inv.status);
