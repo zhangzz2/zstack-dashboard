@@ -24122,6 +24122,11 @@ var MVolume;
                     }];
 
                 _this.bsMgr.query(qobj, function (bss) {
+                    for (var i = 0; i < bss.length; i++) {
+                        if (bss[i].type == 'Ceph') {
+                            bss[i].type = 'Lich';
+                        }
+                    }
                     _this.$scope.backupStorageOptions__.dataSource.data(bss);
                     if (bss.length > 0) {
                         _this.$scope.bsUuid = bss[0].uuid;
